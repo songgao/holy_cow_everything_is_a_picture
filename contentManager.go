@@ -79,8 +79,8 @@ func (i *contentManager) startWatching() error {
 						i.muStructureJSON.Lock()
 						i.structureJSON = j
 						i.muStructureJSON.Unlock()
+						structureLastMod = mod
 					}
-					structureLastMod = mod
 				}
 			}
 		}
