@@ -26,11 +26,12 @@ func parseStructure(reader io.Reader) (interface{}, error) {
 		}
 		lines = append(lines, line)
 	}
-	parsed, err := parseList(lines)
+	counter := 0
+	parsed, err := parseList(lines, &counter)
 	return parsed, err
 }
 
-func parseList(lines []string) ([]*node, error) {
+func parseList(lines []string, counter *int) ([]*node, error) {
 	var err error
 
 	ret := make([]*node, 0)
@@ -41,11 +42,11 @@ func parseList(lines []string) ([]*node, error) {
 	if _, second := getTokens(lines[0]); second == "" { // is a category
 		baseIndent := getIndent(lines[0])
 		for i := 0; i < len(lines); {
-			ret = append(ret, &node{Name: strings.Trim(lines[i], "\r\n ")})
+			ret = append(ret, &node{Name: strings.Trim(lines[i], "\r\n "), ID: encodeCounter(counter)})
 			j := i + 1
 			for ; j < len(lines) && getIndent(lines[j]) > baseIndent; j++ {
 			}
-			ret[len(ret)-1].Children, err = parseList(lines[i+1 : j])
+			ret[len(ret)-1].Children, err = parseList(lines[i+1:j], counter)
 			if err != nil {
 				return nil, err
 			}
@@ -54,8 +55,7 @@ func parseList(lines []string) ([]*node, error) {
 	} else {
 		for i := 0; i < len(lines); i++ {
 			first, second := getTokens(lines[i])
-			id := encodeName(first)
-			ret = append(ret, &node{Name: first, ID: &id, Filename: &second})
+			ret = append(ret, &node{Name: first, ID: encodeCounter(counter), Filename: &second})
 		}
 	}
 
@@ -76,4 +76,10 @@ func getTokens(str string) (first, second string) {
 
 func encodeName(name string) string {
 	return fmt.Sprintf("id%x", name)
+}
+
+func encodeCounter(counter *int) *string {
+	ret := fmt.Sprintf("id%x", (*counter))
+	(*counter)++
+	return &ret
 }
