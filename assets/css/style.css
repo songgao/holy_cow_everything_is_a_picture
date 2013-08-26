@@ -15,21 +15,36 @@ body {
 }
 
 .sidebar {
+    position: fixed;
     margin-top: 128px;
+    padding-left: 16px;
+    width: 12.5%;
 }
 
-.sidebar h4 {
-    letter-spacing: 1px;
-    margin-bottom: 24px;
-    font-weight: bolder;
+#logo {
+    width: 72px;
+    margin-bottom: 16px;
 }
 
 #toc {
-    padding-left: 16px;
+    padding-left: 22px;
+}
+
+#content_container {
+    float: right;
+    width: 87.5%;
 }
 
 #content {
-    padding-top: 8px;
+    margin-right: 11px;
+}
+
+.content_item {
+    margin-bottom: 16px;
+}
+
+.content_item_img {
+    width: 100%;
 }
 
 .toc_list {

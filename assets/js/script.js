@@ -38,10 +38,8 @@ Controller.prototype.bind_click = function(clickable, content) {
     clickable.click(function() {
         cnt.html('');
         $.each(content, function(index, obj) {
-            var row = $('<div class="row"></div>');
-            row.append('<img class="col-md-12" src="/content/' + obj.filename + '"/>');
-            row.append('<h5>' + obj.name + '</h5>');
-            row.append("<hr/>");
+            var row = $('<div class="content_item"></div>');
+            row.append('<img class="content_item_img" src="/content/' + obj.filename + '"/>');
             cnt.append(row);
         });
     });
