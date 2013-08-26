@@ -1,0 +1,13 @@
+misc
+    Matrix      {|} matrix.jpg
+    Golden Hour {|} goldenhour.jpg
+diary
+    Gopher Hat    {|} gopherhat.jpg
+    Gopher Helmet {|} gopherhelmet.jpg
+painting
+    portrait
+        Gopher Mega    {|} gophermega.jpg
+        Gopher Running {|} gopherrunning.jpg
+    animals
+        Gopher Swim   {|} gopherswim.jpg
+        Gopher Search {|} gopherswrench.jpg

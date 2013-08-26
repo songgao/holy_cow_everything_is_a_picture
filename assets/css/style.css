@@ -1,0 +1,53 @@
+@font-face {
+    font-family: american-typewriter;
+    src: url('/fonts/american_typewriter.ttf');
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: american-typewriter;
+    src: url('/fonts/american_typewriter_bold.ttf');
+    font-weight: bold;
+}
+
+body {
+    font-family: american-typewriter;
+}
+
+.sidebar {
+    margin-top: 128px;
+}
+
+.sidebar h4 {
+    letter-spacing: 1px;
+    margin-bottom: 24px;
+    font-weight: bolder;
+}
+
+#toc {
+    padding-left: 16px;
+}
+
+#content {
+    padding-top: 8px;
+}
+
+.toc_list {
+    margin-bottom: 8px
+}
+.indent {
+    margin-left: 16px;
+}
+
+.sidebar a {
+    color: #222222;
+}
+
+#content img {
+    padding: 0px;
+}
+
+h5 {
+    margin-bottom: 64px;
+    color: #555555;
+}
