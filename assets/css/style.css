@@ -19,6 +19,8 @@ body {
     margin-top: 128px;
     padding-left: 16px;
     width: 12.5%;
+    height: 100%;
+    overflow: hidden;
 }
 
 #logo {
@@ -27,7 +29,10 @@ body {
 }
 
 #toc {
-    padding-left: 22px;
+    padding-left: 28px;
+    margin-right: -18px;
+    padding-right: 18px;
+    overflow-y: scroll;
 }
 
 #content_container {
@@ -48,14 +53,14 @@ body {
 }
 
 .toc_list {
-    margin-bottom: 8px
-}
-.indent {
-    margin-left: 16px;
 }
 
 .sidebar a {
     color: #222222;
+}
+
+.sidebar a span {
+    margin-left: -6px;
 }
 
 #content img {
@@ -65,4 +70,13 @@ body {
 h5 {
     margin-bottom: 64px;
     color: #555555;
+}
+
+.link-in {
+    color: #ae0000 !important;
+}
+
+.dir-in {
+    display: list-item;
+    list-style-type: disc;
 }
