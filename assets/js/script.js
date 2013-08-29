@@ -35,7 +35,7 @@ Controller.prototype.populate_toc = function() {
             div.append(clickable);
         }
     }
-    $.each(self.structure, function(index, item) {
+    $.each(self.structure.list, function(index, item) {
         populate_obj(item, $('#toc'));
     });
 };
@@ -54,16 +54,26 @@ Controller.prototype.bind_click = function(clickable, content) {
     });
 };
 
+Controller.prototype.bind_logo = function() {
+    var self = this;
+    $('#logo').click(function() {
+        var cnt = $('#content');
+        cnt.html('');
+        cnt.append('<div class="content_item"><img class="content_item_img" src="/content/' + self.structure.frontpage + '" alt="Feyart"/></div>');
+    });
+};
+
 function init() {
     $(window).resize(function() {
         $('#toc').height($('.sidebar').height() - $('.sidebar').width() - $('#toc').position().top - parseInt($('.sidebar').css("margin-top")));
     });
     $(window).load(function() {
-        ctl = new Controller();
+        var ctl = new Controller();
         ctl.get_structure(function() {
+            ctl.bind_logo();
             ctl.populate_toc();
             $(window).trigger('resize');
-            $('#toc > a:first').trigger('click');
+            $('#logo').trigger('click');
         });
     });
 }
