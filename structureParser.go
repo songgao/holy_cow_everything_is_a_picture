@@ -8,19 +8,19 @@ import (
 	"strings"
 )
 
+const (
+	cWhite = "\r\n\t "
+	cSep   = "{|}"
+)
+
 type node struct {
 	Name     string  `json:"name"`
 	Children []*node `json:"children"`
-	Filename *string `json:"filename"`
-	ID       *string `json:"id"`
+	Filename string  `json:"filename"`
+	ID       string  `json:"id"`
 }
 
-type structure struct {
-	Frontpage string  `json:"frontpage"`
-	List      []*node `json:"list"`
-}
-
-func parseStructure(reader io.Reader) (*structure, error) {
+func parseStructure(reader io.Reader) (*node, error) {
 	lines := make([]string, 0)
 	r := bufio.NewReader(reader)
 	var err error
@@ -30,17 +30,22 @@ func parseStructure(reader io.Reader) (*structure, error) {
 		if err != nil && err != io.EOF {
 			return nil, err
 		}
-		lines = append(lines, line)
+		if len(strings.Trim(line, cWhite)) > 0 {
+			lines = append(lines, line)
+		}
 	}
-	counter := 0
 	if len(lines) < 2 {
 		return nil, errors.New("Not enough lines in structure file.")
 	}
-	parsed, err := parseList(lines[1:], &counter)
-	return &structure{Frontpage: strings.Trim(lines[0], "\r\n\t "), List: parsed}, err
+	parsed, err := parseList(lines)
+	if parsed != nil && len(parsed) > 0 {
+		return parsed[0], err
+	} else {
+		return nil, err
+	}
 }
 
-func parseList(lines []string, counter *int) ([]*node, error) {
+func parseList(lines []string) ([]*node, error) {
 	var err error
 
 	ret := make([]*node, 0)
@@ -48,23 +53,33 @@ func parseList(lines []string, counter *int) ([]*node, error) {
 		return ret, nil
 	}
 
-	if _, second := getTokens(lines[0]); second == "" { // is a category
-		baseIndent := getIndent(lines[0])
-		for i := 0; i < len(lines); {
-			ret = append(ret, &node{Name: strings.Trim(lines[i], "\r\n\t "), ID: encodeCounter(counter)})
-			j := i + 1
-			for ; j < len(lines) && getIndent(lines[j]) > baseIndent; j++ {
+	baseIndent := getIndent(lines[0])
+	for i := 0; i < len(lines); {
+		if baseIndent > getIndent(lines[i]) {
+			return nil, errors.New("Indents are inconsistent.")
+		}
+		if baseIndent == getIndent(lines[i]) {
+			first, second := getTokens(lines[i])
+			n := &node{ID: getID()}
+			if first != "" {
+				n.Name = first
 			}
-			ret[len(ret)-1].Children, err = parseList(lines[i+1:j], counter)
+			if second != "" {
+				n.Filename = second
+			}
+			ret = append(ret, n)
+			i++
+		} else {
+			childrenIndent := getIndent(lines[i])
+			childrenStart := i
+			childrenEnd := i + 1
+			for ; childrenEnd < len(lines) && getIndent(lines[childrenEnd]) >= childrenIndent; childrenEnd++ {
+			}
+			ret[len(ret)-1].Children, err = parseList(lines[childrenStart:childrenEnd])
 			if err != nil {
 				return nil, err
 			}
-			i = j
-		}
-	} else {
-		for i := 0; i < len(lines); i++ {
-			first, second := getTokens(lines[i])
-			ret = append(ret, &node{Name: first, ID: encodeCounter(counter), Filename: &second})
+			i = childrenEnd
 		}
 	}
 
@@ -72,23 +87,20 @@ func parseList(lines []string, counter *int) ([]*node, error) {
 }
 
 func getIndent(str string) int {
-	return len(str) - len(strings.TrimLeft(str, "\r\n\t "))
+	return len(str) - len(strings.TrimLeft(str, cWhite))
 }
 
 func getTokens(str string) (first, second string) {
-	tokens := strings.Split(str, "{|}")
+	tokens := strings.Split(str, cSep)
 	if len(tokens) > 1 {
-		return strings.Trim(tokens[0], "\r\n\t "), strings.Trim(tokens[1], "\r\n\t ")
+		return strings.Trim(tokens[0], cWhite), strings.Trim(tokens[1], cWhite)
 	}
-	return strings.Trim(tokens[0], "\r\n\t "), ""
+	return strings.Trim(tokens[0], cWhite), ""
 }
 
-func encodeName(name string) string {
-	return fmt.Sprintf("id%x", name)
-}
+var counter = 0
 
-func encodeCounter(counter *int) *string {
-	ret := fmt.Sprintf("id%x", (*counter))
-	(*counter)++
-	return &ret
+func getID() string {
+	counter++
+	return fmt.Sprintf("id%x", counter)
 }

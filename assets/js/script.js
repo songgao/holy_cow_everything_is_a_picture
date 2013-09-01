@@ -15,6 +15,7 @@ Controller.prototype.populate_toc = function() {
         if (obj.children && obj.children[0] && obj.children[0].children) {
             var id = obj.id ? obj.id : obj.name;
             var link = $('<a class="accordion-toggle" data-toggle="collapse" href="#' + id + '"><span>' + obj.name + '</span></a>');
+            self.bind_dir_click(link, obj);
             var children = $('<div class="toc_list collapse" id="' + id + '"></div>');
             children.on('shown.bs.collapse', function() {
                 link.addClass('dir-in');
@@ -35,10 +36,12 @@ Controller.prototype.populate_toc = function() {
             div.append(clickable);
         }
     }
-    $.each(self.structure.list, function(index, item) {
+    $.each(self.structure.children, function(index, item) {
         populate_obj(item, $('#toc'));
     });
+    self.bind_dir_click($('#logo'), self.structure);
 };
+
 
 Controller.prototype.bind_click = function(clickable, content) {
     var cnt = $('#content');
@@ -54,12 +57,12 @@ Controller.prototype.bind_click = function(clickable, content) {
     });
 };
 
-Controller.prototype.bind_logo = function() {
+Controller.prototype.bind_dir_click = function(clickable, obj) {
     var self = this;
-    $('#logo').click(function() {
+    clickable.click(function() {
         var cnt = $('#content');
         cnt.html('');
-        cnt.append('<div class="content_item"><img class="content_item_img" src="/content/' + self.structure.frontpage + '" alt="Feyart"/></div>');
+        cnt.append('<div class="content_item"><img class="content_item_img" src="/content/' + obj.filename + '" alt="' + obj.name + '"/></div>');
     });
 };
 
@@ -70,7 +73,6 @@ function init() {
     $(window).load(function() {
         var ctl = new Controller();
         ctl.get_structure(function() {
-            ctl.bind_logo();
             ctl.populate_toc();
             $(window).trigger('resize');
             $('#logo').trigger('click');

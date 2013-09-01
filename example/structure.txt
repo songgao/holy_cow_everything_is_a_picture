@@ -1,17 +1,14 @@
-1.jpg
-test
-    {|} 1.jpg
-    {|} 2.jpg
-misc
-    {|} matrix.jpg
-    {|} goldenhour.jpg
-diary
-    {|} gopherhat.jpg
-    {|} gopherhelmet.jpg
-painting
-    portrait
-        {|} gophermega.jpg
-        {|} gopherrunning.jpg
-    animals
-        {|} gopherswim.jpg
-        {|} gopherswrench.jpg
+{|} goldenhour.jpg
+    misc {|} matrix.jpg
+        {|} matrix.jpg
+        {|} goldenhour.jpg
+    diary {|} gopherhat.jpg
+        {|} gopherhat.jpg
+        {|} gopherhelmet.jpg
+    painting {|} gophermega.jpg
+        portrait
+            {|} gophermega.jpg
+            {|} gopherrunning.jpg
+        animals
+            {|} gopherswim.jpg
+            {|} gopherswrench.jpg
